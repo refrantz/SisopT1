@@ -20,6 +20,9 @@ public class Maquina {
             String op = input[0];
             String param = input[1];
 
+            if(param.contains("#")){
+               
+            }
             if (op.equals("ADD")){
                 acc += Integer.parseInt(param);
             }else if(op.equals("SUB")){
