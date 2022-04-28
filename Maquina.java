@@ -10,6 +10,7 @@ public class Maquina {
     public static void main (String args[]){
 
         int acc = 0;
+        List<String> regiaoDados = new ArrayList<String>();
         List<String> codigo = new ArrayList<String>();
         Map<String, Integer> dados = new LinkedHashMap<String, Integer>();
         Map<String, Integer> labels = new HashMap<String, Integer>();
@@ -18,6 +19,11 @@ public class Maquina {
         dados.put("cuc", 2);
         dados.put("cucu", 3);
         codigo.add(args[0]);
+
+        for (String linha : regiaoDados){
+            String[] input = linha.split(" ");
+            dados.put(input[0], Integer.parseInt(input[1]));
+        }
 
         for (int pc = 0; pc < codigo.size();pc++){
 
