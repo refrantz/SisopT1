@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -15,10 +20,43 @@ public class Maquina {
         Map<String, Integer> dados = new LinkedHashMap<String, Integer>();
         Map<String, Integer> labels = new HashMap<String, Integer>();
 
-        dados.put("cu", 1);
-        dados.put("cuc", 2);
-        dados.put("cucu", 3);
-        codigo.add(args[0]);
+        try {
+
+            BufferedReader br = new BufferedReader(new FileReader("exemplo.txt"));
+            String linha = br.readLine().strip().toUpperCase();
+
+            while(linha != null){
+
+                if(linha.equals(".CODE")){
+                    linha = br.readLine().strip().toUpperCase();
+                    while(!linha.equals(".ENDCODE")){
+                        codigo.add(linha);
+                        linha = br.readLine().strip().toUpperCase();
+                    }
+                }
+
+                if(linha.equals(".DATA")){
+                    linha = br.readLine().strip().toUpperCase();
+                    while(!linha.equals(".ENDDATA")){
+                        regiaoDados.add(linha);
+                        linha = br.readLine().strip().toUpperCase();
+                    }
+                }
+
+                linha = br.readLine();
+                if(linha != null){
+                    linha = linha.strip().toUpperCase();
+                }
+
+            }
+
+            br.close();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
 
         for (String linha : regiaoDados){
             String[] input = linha.split(" ");
@@ -38,7 +76,7 @@ public class Maquina {
             }
 
             if(param.contains("#")){
-                param = "" + dados.values().toArray()[Integer.parseInt(param.substring(1))];
+                param = "" + dados.values().toArray()[Integer.parseInt(param.substring(1))-1];
             }
             
             if (op.equals("ADD")){
@@ -51,7 +89,11 @@ public class Maquina {
                 acc /= Integer.parseInt(param);
 
             }else if(op.equals("LOAD")){
-                acc = Integer.parseInt(param);
+                if(dados.containsKey(param)){
+                    acc = dados.get(param);
+                }else{
+                    acc = Integer.parseInt(param);
+                }
             }else if(op.equals("STORE")){
                 dados.replace(param, acc);
 
@@ -69,7 +111,8 @@ public class Maquina {
 
                 if(paramC == 0){
                     System.exit(0);
-                }else{
+                }else if(paramC == 1){
+                    System.out.println(acc);
                     int intervalo = ThreadLocalRandom.current().nextInt(0, 21);
                 }
             }
