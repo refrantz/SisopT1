@@ -70,9 +70,9 @@ public class Maquina {
             String param = input[1];
 
             if(op.contains(":")){
+                labels.put(op.substring(0, op.length()-1), pc-1);
                 op = input[1];
                 param = input[2];
-                labels.put(input[0], pc);
             }
 
             if(param.contains("#")){
@@ -112,7 +112,7 @@ public class Maquina {
                 if(paramC == 0){
                     System.exit(0);
                 }else if(paramC == 1){
-                    System.out.println(acc);
+                    //System.out.println(acc);
                     int intervalo = ThreadLocalRandom.current().nextInt(0, 21);
                 }
             }
