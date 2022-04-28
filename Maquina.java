@@ -11,9 +11,9 @@ public class Maquina {
     static List<String> codigo = new ArrayList<String>();
 
     public static void main (String args[]){
+        codigo.add(args[0]);
 
-        //for (String linha:codigo){
-        String linha = args[0];
+        for (String linha:codigo){
 
             Map<String, Integer> dados = new LinkedHashMap<String, Integer>();
             dados.put("cu", 1);
@@ -56,4 +56,4 @@ public class Maquina {
             System.out.println(acc);
         }
     }
-//}
+}
