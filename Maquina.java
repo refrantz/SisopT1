@@ -79,14 +79,33 @@ public class Maquina {
         //for(Processo processo : processos){
             Processo processo = processos.get(1);
             System.out.println("mudou processo ----");
+
+            for (int pc = 0; pc < processo.codigo.size(); pc++){
+                String[] input = processo.codigo.get(pc).split("\\s+");
+                String op = input[0].toUpperCase();
+
+                if (input.length <= 1){
+                    processo.labels.put(op.substring(0, op.length()-1), pc);
+                    pc++;
+                    input = processo.codigo.get(pc).split("\\s+");
+                }
+
+                op = input[0].toUpperCase();
+    
+                if(op.contains(":")){
+                    processo.labels.put(op.substring(0, op.length()-1), processo.pc-1);
+                }
+            }
+
             for (; processo.pc < processo.codigo.size(); processo.pc++){
 
                 String[] input = processo.codigo.get(processo.pc).split("\\s+");
                 String op = input[0].toUpperCase();
 
                 if (input.length <= 1){
-                    processo.labels.put(op.substring(0, op.length()-1), processo.pc-1);
-                    input = processo.codigo.get(processo.pc+1).split("\\s+");
+                    processo.labels.put(op.substring(0, op.length()-1), processo.pc);
+                    processo.pc++;
+                    input = processo.codigo.get(processo.pc).split("\\s+");
                 }
 
                 op = input[0].toUpperCase();
@@ -147,7 +166,7 @@ public class Maquina {
                         int intervalo = ThreadLocalRandom.current().nextInt(0, 21);
                     }
                 }
-                //System.out.println(acc);
+                System.out.println(acc);
             }
         //}
         
