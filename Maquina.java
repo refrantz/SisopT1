@@ -75,7 +75,8 @@ public class Maquina {
 
 
 
-        for(Processo processo : processos){
+        //for(Processo processo : processos){
+            Processo processo = processos.get(0);
             System.out.println("mudou processo ----");
             for (; processo.pc < processo.codigo.size(); processo.pc++){
 
@@ -90,7 +91,9 @@ public class Maquina {
                 }
     
                 if(param.contains("#")){
-                    param = "" + Integer.parseInt(param.substring(1));
+                    param = param.substring(1);
+                }else if(processo.dados.containsKey(param.substring(1))){
+                    param = "" + processo.dados.get(param.substring(1));
                 }
                 
                 if (op.equals("ADD")){
@@ -132,7 +135,7 @@ public class Maquina {
                 }
                 System.out.println(acc);
             }
-        }
+        //}
         
     }
 }
