@@ -15,14 +15,21 @@ public class Maquina {
     public static void main (String args[]){
 
         int acc = 0;
+        List<Processo> processos = new ArrayList<Processo>();
         List<String> regiaoDados = new ArrayList<String>();
-        List<String> codigo = new ArrayList<String>();
+        //List<String> codigo = new ArrayList<String>(); talvez seja melhor tratar as linhas de codigo individualmente por processo
         Map<String, Integer> dados = new LinkedHashMap<String, Integer>();
         Map<String, Integer> labels = new HashMap<String, Integer>();
 
+        // ainda precisa mudar a estrutura para trabalhar com multiplos programas, faz parte da interface ( precisamos decidir como fazer isso ).
         try {
 
-            BufferedReader br = new BufferedReader(new FileReader("exemplo.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("programas/prog1.txt"));
+
+            //Criando o processo e adicionando ele na lista de processos - importante ter uma lista de processos pro escalonador conseguir decidir qual rodar depois
+            Processo processo1 = new Processo(0);
+            processos.add(processo1);
+
             String linha = br.readLine().strip().toUpperCase();
 
             while(linha != null){
@@ -30,7 +37,7 @@ public class Maquina {
                 if(linha.equals(".CODE")){
                     linha = br.readLine().strip().toUpperCase();
                     while(!linha.equals(".ENDCODE")){
-                        codigo.add(linha);
+                        processo1.codigo.add(linha);
                         linha = br.readLine().strip().toUpperCase();
                     }
                 }
@@ -63,9 +70,10 @@ public class Maquina {
             dados.put(input[0], Integer.parseInt(input[1]));
         }
 
-        for (int pc = 0; pc < codigo.size();pc++){
+        //mudar para ser feito pra todos os processos, se um programa perde processador e volta depois ele deve voltar na mesma linha de antes, entao o PC pode ficar guardado na classe Processo.
+        for (int pc = 0; pc < processos.get(0).codigo.size(); pc++){
 
-            String[] input = codigo.get(pc).split(" ");
+            String[] input = processos.get(0).codigo.get(pc).split(" ");
             String op = input[0];
             String param = input[1];
 
@@ -76,11 +84,15 @@ public class Maquina {
             }
 
             if(param.contains("#")){
-                param = "" + dados.values().toArray()[Integer.parseInt(param.substring(1))-1];
+                param = "" + Integer.parseInt(param.substring(1));
             }
             
             if (op.equals("ADD")){
-                acc += Integer.parseInt(param);
+                if(dados.containsKey(param)){ //esse IF ELSE tem que estar para todas as operações aritmeticas - talvez exista um jeito mais elegante de fazer isso
+                    acc += dados.get(param);
+                }else{
+                    acc += Integer.parseInt(param);
+                }
             }else if(op.equals("SUB")){
                 acc -= Integer.parseInt(param);
             }else if(op.equals("MULT")){
