@@ -8,5 +8,5 @@
 
 .data
     variable 10
-    cuporra 1
+    favorignoraronomequetavaantes 1
 .enddata
