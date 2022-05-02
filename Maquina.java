@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Maquina {
@@ -102,7 +103,7 @@ public class Maquina {
                 }else if(processo.dados.containsKey(param)){
                     param = "" + processo.dados.get(param);
                 }
-                System.out.println(param);
+                //System.out.println(param);
                 
                 if (op.equals("ADD")){
                     acc += Integer.parseInt(param);
@@ -137,7 +138,12 @@ public class Maquina {
                     if(paramC == 0){
                         System.exit(0);
                     }else if(paramC == 1){
-                        //System.out.println(acc);
+                        System.out.println(acc);
+                        int intervalo = ThreadLocalRandom.current().nextInt(0, 21);
+                    }else if(paramC == 2){
+                        Scanner sc= new Scanner(System.in);
+                        System.out.print("Insira um numero: ");
+                        acc = sc.nextInt();
                         int intervalo = ThreadLocalRandom.current().nextInt(0, 21);
                     }
                 }
