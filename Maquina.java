@@ -48,7 +48,7 @@ public class Maquina {
                         linha = br.readLine().strip().toUpperCase();
                         //System.out.println(linha);
                         while(!linha.equals(".ENDDATA")){
-                            String[] input = linha.split(" ");
+                            String[] input = linha.split("\\s+");
                             processo.dados.put(input[0], Integer.parseInt(input[1]));
                             linha = br.readLine().strip().toUpperCase();
                         }
@@ -76,12 +76,19 @@ public class Maquina {
 
 
         //for(Processo processo : processos){
-            Processo processo = processos.get(0);
+            Processo processo = processos.get(1);
             System.out.println("mudou processo ----");
             for (; processo.pc < processo.codigo.size(); processo.pc++){
 
-                String[] input = processo.codigo.get(processo.pc).split(" ");
+                String[] input = processo.codigo.get(processo.pc).split("\\s+");
                 String op = input[0].toUpperCase();
+
+                if (input.length <= 1){
+                    processo.labels.put(op.substring(0, op.length()-1), processo.pc-1);
+                    input = processo.codigo.get(processo.pc+1).split("\\s+");
+                }
+
+                op = input[0].toUpperCase();
                 String param = input[1].toUpperCase();
     
                 if(op.contains(":")){
@@ -92,9 +99,10 @@ public class Maquina {
     
                 if(param.contains("#")){
                     param = param.substring(1);
-                }else if(processo.dados.containsKey(param.substring(1))){
-                    param = "" + processo.dados.get(param.substring(1));
+                }else if(processo.dados.containsKey(param)){
+                    param = "" + processo.dados.get(param);
                 }
+                System.out.println(param);
                 
                 if (op.equals("ADD")){
                     acc += Integer.parseInt(param);
@@ -133,7 +141,7 @@ public class Maquina {
                         int intervalo = ThreadLocalRandom.current().nextInt(0, 21);
                     }
                 }
-                System.out.println(acc);
+                //System.out.println(acc);
             }
         //}
         
