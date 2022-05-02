@@ -16,6 +16,8 @@ public class Maquina {
 
         int acc = 0;
         List<Processo> processos = new ArrayList<Processo>();
+        int arrival = 0;
+
 
         // ainda precisa mudar a estrutura para trabalhar com multiplos programas, faz parte da interface ( precisamos decidir como fazer isso ).
         try {
@@ -27,7 +29,7 @@ public class Maquina {
                 BufferedReader br = new BufferedReader(new FileReader(txt));
 
                 //Criando o processo e adicionando ele na lista de processos - importante ter uma lista de processos pro escalonador conseguir decidir qual rodar depois
-                Processo processo = new Processo(0);
+                Processo processo = new Processo(arrival);
                 processos.add(processo);
 
                 String linha = br.readLine().strip().toUpperCase();
@@ -44,7 +46,7 @@ public class Maquina {
 
                     if(linha.equals(".DATA")){
                         linha = br.readLine().strip().toUpperCase();
-                        System.out.println(linha);
+                        //System.out.println(linha);
                         while(!linha.equals(".ENDDATA")){
                             String[] input = linha.split(" ");
                             processo.dados.put(input[0], Integer.parseInt(input[1]));
@@ -59,6 +61,7 @@ public class Maquina {
 
                 }
 
+                arrival++;
                 br.close();
             }
 
@@ -73,6 +76,7 @@ public class Maquina {
 
 
         for(Processo processo : processos){
+            System.out.println("mudou processo ----");
             for (; processo.pc < processo.codigo.size(); processo.pc++){
 
                 String[] input = processo.codigo.get(processo.pc).split(" ");
