@@ -22,7 +22,7 @@ public class Maquina {
         lerProcessos();
         Processo processo = processos.get(1); //só por enquanto - isso é pra mudar quando o escalonador nascer
 
-        //deve fazer parte do escalonador -------------
+        //deve fazer parte do escalonador ------------- executa as instruções de um processo
         for (; processo.pc < processo.codigo.size(); processo.pc++){
 
                 String[] input = processo.codigo.get(processo.pc).split("\\s+");
@@ -90,10 +90,11 @@ public class Maquina {
                     }
                 }
                 tempo++;
-                //System.out.println(acc);
+                //System.out.println(acc); 
             } //deve fazer parte do escalonador ------------- fim
     }
 
+    //faz a leitura inicial dos processos - deve ser executada apenas no inicio
     public static void lerProcessos() {
         try {
 
@@ -103,7 +104,6 @@ public class Maquina {
 
                 BufferedReader br = new BufferedReader(new FileReader(txt));
 
-                //Criando o processo e adicionando ele na lista de processos - importante ter uma lista de processos pro escalonador conseguir decidir qual rodar depois
                 Processo processo = new Processo(0);
                 processos.add(processo);
 
