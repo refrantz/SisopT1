@@ -15,7 +15,7 @@ public class Escalanador {
     public Escalanador(List<Processo> processos, String metodoDeEscalonamento) {
         this.processos = processos;
         this.metodoDeEscalonamento = metodoDeEscalonamento;
-        
+
         if(metodoDeEscalonamento.equals("RoundRobin")){
             System.out.println("RoundRobin precisa do parametro quantum!");
             System.exit(0);
@@ -27,26 +27,26 @@ public class Escalanador {
         Processo processoPrioritario;
 
         if(metodoDeEscalonamento.equals("PrioridadeSemPreempcao"))
-            processoPrioritario = EscalonamentoPrioridadeSemPreempcao(processos, unidadeDeTempoAtual);
+            processoPrioritario = EscalonamentoPrioridadeSemPreempcao(unidadeDeTempoAtual);
         else if(metodoDeEscalonamento.equals("PrioridadeComPreempcao"))
-            processoPrioritario = EscalonamentoPrioridadeComPreempcao(processos, unidadeDeTempoAtual);
+            processoPrioritario = EscalonamentoPrioridadeComPreempcao(unidadeDeTempoAtual);
         else
-            processoPrioritario = EscalonamentoRoundRobin(processos, unidadeDeTempoAtual, quantum);
+            processoPrioritario = EscalonamentoRoundRobin(unidadeDeTempoAtual);
 
         return processoPrioritario;
     }
 
-    private Processo EscalonamentoPrioridadeSemPreempcao(List<Processo> processos, int unidadeDeTempoAtual) {
+    private Processo EscalonamentoPrioridadeSemPreempcao(int unidadeDeTempoAtual) {
         //TO DO
         return null;
     }
 
-    private Processo EscalonamentoPrioridadeComPreempcao(List<Processo> processos, int unidadeDeTempoAtual) {
+    private Processo EscalonamentoPrioridadeComPreempcao(int unidadeDeTempoAtual) {
         //TO DO
         return null;
     }
 
-    private Processo EscalonamentoRoundRobin(List<Processo> processos, int unidadeDeTempoAtual, int quantum) {
+    private Processo EscalonamentoRoundRobin(int unidadeDeTempoAtual) {
         //TO DO
         return null;
     }
