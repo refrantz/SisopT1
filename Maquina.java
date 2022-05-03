@@ -29,7 +29,6 @@ public class Maquina {
                 String op = input[0].toUpperCase();
 
                 if (input.length <= 1){
-                    processo.labels.put(op.substring(0, op.length()-1), processo.pc);
                     processo.pc++;
                     input = processo.codigo.get(processo.pc).split("\\s+");
                 }
@@ -38,7 +37,6 @@ public class Maquina {
                 String param = input[1].toUpperCase();
     
                 if(op.contains(":")){
-                    processo.labels.put(op.substring(0, op.length()-1), processo.pc-1);
                     op = param;
                     param = input[2].toUpperCase();
                 }
@@ -92,7 +90,7 @@ public class Maquina {
                     }
                 }
                 tempo++;
-                System.out.println(acc);
+                //System.out.println(acc);
             } //deve fazer parte do escalonador ------------- fim
     }
 
@@ -145,23 +143,22 @@ public class Maquina {
 
         }
 
-        //essa parte deveria ser feita pra todos os processos também
-        Processo processo = processos.get(1);
-
-        for (int pc = 0; pc < processo.codigo.size(); pc++){
-            String[] input = processo.codigo.get(pc).split("\\s+");
-            String op = input[0].toUpperCase();
-
-            if (input.length <= 1){
-                processo.labels.put(op.substring(0, op.length()-1), pc);
-                pc++;
-                input = processo.codigo.get(pc).split("\\s+");
-            }
-
-            op = input[0].toUpperCase();
-
-            if(op.contains(":")){
-                processo.labels.put(op.substring(0, op.length()-1), processo.pc-1);
+        for(Processo processo : processos){
+            for (int pc = 0; pc < processo.codigo.size(); pc++){
+                String[] input = processo.codigo.get(pc).split("\\s+");
+                String op = input[0].toUpperCase();
+    
+                if (input.length <= 1){
+                    processo.labels.put(op.substring(0, op.length()-1), pc);
+                    pc++;
+                    input = processo.codigo.get(pc).split("\\s+");
+                }
+    
+                op = input[0].toUpperCase();
+    
+                if(op.contains(":")){
+                    processo.labels.put(op.substring(0, op.length()-1), processo.pc-1);
+                }
             }
         }
     }
