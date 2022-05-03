@@ -12,86 +12,97 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Maquina {
+    static int acc;
+    static int tempo;
+    static int arrival;
     static List<Processo> processos = new ArrayList<Processo>();
+    static Scanner teclado;
 
     public static void main (String args[]){
 
-        int acc = 0;
-        int tempo = 0;
-        int arrival = 0;
+        acc = 0;
+        tempo = 0;
+        arrival = 0;
+        teclado = new Scanner(System.in);
         lerProcessos();
         Processo processo = processos.get(1); //só por enquanto - isso é pra mudar quando o escalonador nascer
 
         //deve fazer parte do escalonador ------------- executa as instruções de um processo
         for (; processo.pc < processo.codigo.size(); processo.pc++){
+            //aqui podemos remover essse for e colocar um while que roda enquanto existirem processos, em cada loop chamamos o escalonador e passamos seu retorno para o metodo que executa uma instrucao desse processo
+            executaProcessoIntrucao(processo);
+            tempo++;
+        }
+        teclado.close();
+    }
 
-                String[] input = processo.codigo.get(processo.pc).split("\\s+");
-                String op = input[0].toUpperCase();
 
-                if (input.length <= 1){
-                    processo.pc++;
-                    input = processo.codigo.get(processo.pc).split("\\s+");
-                }
+    //executa uma instrução do processo
+    public static void executaProcessoIntrucao(Processo processo){
+        String[] input = processo.codigo.get(processo.pc).split("\\s+");
+        String op = input[0].toUpperCase();
 
-                op = input[0].toUpperCase();
-                String param = input[1].toUpperCase();
-    
-                if(op.contains(":")){
-                    op = param;
-                    param = input[2].toUpperCase();
-                }
-    
-                if(param.contains("#")){
-                    param = param.substring(1);
-                }else if(processo.dados.containsKey(param)){
-                    param = "" + processo.dados.get(param);
-                }
+        if (input.length <= 1){
+            processo.pc++;
+            input = processo.codigo.get(processo.pc).split("\\s+");
+        }
 
-                if (op.equals("ADD")){
-                    acc += Integer.parseInt(param);
-                }else if(op.equals("SUB")){
-                    acc -= Integer.parseInt(param);
-                }else if(op.equals("MULT")){
-                    acc *= Integer.parseInt(param);
-                }else if(op.equals("DIV")){
-                    acc /= Integer.parseInt(param);
-    
-                }else if(op.equals("LOAD")){
-                    if(processo.dados.containsKey(param)){
-                        acc = processo.dados.get(param);
-                    }else{
-                        acc = Integer.parseInt(param);
-                    }
-                }else if(op.equals("STORE")){
-                    processo.dados.replace(param, acc);
-    
-                }else if(op.equals("BRANY")){
-                    processo.pc = processo.labels.get(param);
-                }else if(op.equals("BRPOS") && acc > 0){
-                    processo.pc = processo.labels.get(param);
-                }else if(op.equals("BRZERO") && acc == 0){
-                    processo.pc = processo.labels.get(param);
-                }else if(op.equals("BRNEG") && acc < 0){
-                    processo.pc = processo.labels.get(param);
-    
-                }else if(op.equals("SYSCALL")){
-                    int paramC = Integer.parseInt(param);
-    
-                    if(paramC == 0){
-                        System.exit(0);
-                    }else if(paramC == 1){
-                        System.out.println(acc);
-                        int intervalo = ThreadLocalRandom.current().nextInt(0, 21);
-                    }else if(paramC == 2){
-                        Scanner sc= new Scanner(System.in);
-                        System.out.print("Insira um numero: ");
-                        acc = sc.nextInt();
-                        int intervalo = ThreadLocalRandom.current().nextInt(0, 21);
-                    }
-                }
-                tempo++;
-                //System.out.println(acc); 
-            } //deve fazer parte do escalonador ------------- fim
+        op = input[0].toUpperCase();
+        String param = input[1].toUpperCase();
+
+        if(op.contains(":")){
+            op = param;
+            param = input[2].toUpperCase();
+        }
+
+        if(param.contains("#")){
+            param = param.substring(1);
+        }else if(processo.dados.containsKey(param)){
+            param = "" + processo.dados.get(param);
+        }
+
+        if (op.equals("ADD")){
+            acc += Integer.parseInt(param);
+        }else if(op.equals("SUB")){
+            acc -= Integer.parseInt(param);
+        }else if(op.equals("MULT")){
+            acc *= Integer.parseInt(param);
+        }else if(op.equals("DIV")){
+            acc /= Integer.parseInt(param);
+
+        }else if(op.equals("LOAD")){
+            if(processo.dados.containsKey(param)){
+                acc = processo.dados.get(param);
+            }else{
+                acc = Integer.parseInt(param);
+            }
+        }else if(op.equals("STORE")){
+            processo.dados.replace(param, acc);
+
+        }else if(op.equals("BRANY")){
+            processo.pc = processo.labels.get(param);
+        }else if(op.equals("BRPOS") && acc > 0){
+            processo.pc = processo.labels.get(param);
+        }else if(op.equals("BRZERO") && acc == 0){
+            processo.pc = processo.labels.get(param);
+        }else if(op.equals("BRNEG") && acc < 0){
+            processo.pc = processo.labels.get(param);
+
+        }else if(op.equals("SYSCALL")){
+            int paramC = Integer.parseInt(param);
+
+            if(paramC == 0){
+                System.exit(0);
+            }else if(paramC == 1){
+                System.out.println(acc);
+                int intervalo = ThreadLocalRandom.current().nextInt(10, 21);
+            }else if(paramC == 2){
+                System.out.print("Insira um numero: ");
+                acc = teclado.nextInt();
+                int intervalo = ThreadLocalRandom.current().nextInt(10, 21);
+            }
+        }
+        //System.out.println(acc); 
     }
 
     //faz a leitura inicial dos processos - deve ser executada apenas no inicio
@@ -104,7 +115,19 @@ public class Maquina {
 
                 BufferedReader br = new BufferedReader(new FileReader(txt));
 
-                Processo processo = new Processo(0);
+                System.out.println("Carregando processo: " + txt);
+                System.out.println("Deseja definir sua prioridade? Digite NAO caso nao queira, ou um numero entre 2 (baixa prioridade) e 0 (alta prioridade)");
+
+                Processo processo;
+
+                String entrada = teclado.next().toUpperCase().strip();
+
+                if(entrada.equals("NAO")){
+                    processo = new Processo(0);
+                }else{
+                    processo = new Processo(0, Integer.parseInt(entrada));
+                }
+
                 processos.add(processo);
 
                 String linha = br.readLine().strip().toUpperCase();

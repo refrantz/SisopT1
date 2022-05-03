@@ -26,12 +26,20 @@ public class Processo {
         this.pc = 0;
     }
 
-    public Processo(Integer arrivalTime, Prioridade prioridade){
+    public Processo(Integer arrivalTime, int prioridade){
         this.pid = "Processo " +nupid;
         nupid++;
 
         this.arrivalTime = arrivalTime;
-        this.prioridade = prioridade;
+        
+        if(prioridade == 0){
+            this.prioridade = Prioridade.ALTA;
+        }else if(prioridade == 1){
+            this.prioridade = Prioridade.MEDIA;
+        }else{
+            this.prioridade = Prioridade.BAIXA;
+        }
+
         this.pc = 0;
     }
 
