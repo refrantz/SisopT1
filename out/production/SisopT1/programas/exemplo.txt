@@ -1,12 +1,12 @@
 .code
     load variable
     ponto1: SUB #2
-    syscall  1
+    syscall 1
     brpos ponto1
     syscall 0
 .endcode
 
 .data
     variable 10
-    cuporra 1
+    favorignoraronomequetavaantes 1
 .enddata
