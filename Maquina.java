@@ -44,7 +44,7 @@ public class Maquina {
                 if(aux.waitingTime > 0){
                     aux.waitingTime--;
                 }
-                if(aux.waitingTime == 0){
+                if(aux.waitingTime == 0 && aux.estado == Processo.Estado.BLOQUEADO){
                     aux.estado = Processo.Estado.PRONTO;
                 }
                 
@@ -119,6 +119,7 @@ public class Maquina {
 
             if(paramC == 0){
                 processo.estado = Processo.Estado.FINALIZADO;
+                System.out.println(processo.estado);
                 //devemos mudar para finalizar apenas o processo e nao o algoritmo inteiro
             }else if(paramC == 1){
                 System.out.println(acc);
