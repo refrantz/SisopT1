@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Processo {
+public class Processo implements Comparable<Processo>{
     public String pid; //aka nome, poder ser só um numero identificador como podemos colocar Processo #N, checar isso depois
     public static int nupid;
     public List<String> codigo = new ArrayList<String>();
@@ -43,8 +43,14 @@ public class Processo {
         this.pc = 0;
     }
 
-
-
+    @Override public int compareTo(Processo outroProcesso) { //implementação }
+        if (this.arrivalTime < outroProcesso.arrivalTime) {
+            return -1;
+        } if (this.arrivalTime > outroProcesso.arrivalTime) {
+            return 1;
+        }
+        return 0;
+    }
 
     public enum Estado{PRONTO,RODANDO,BLOQUEADO,FINALIZADO}
     public enum Prioridade{BAIXA,MEDIA,ALTA}
