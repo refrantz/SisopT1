@@ -17,6 +17,7 @@ public class Maquina {
     static int arrival;
     static List<Processo> processos = new ArrayList<Processo>();
     static Scanner teclado;
+    static boolean continua = true;
 
     public static void main (String args[]){
 
@@ -24,16 +25,41 @@ public class Maquina {
         tempo = 0;
         arrival = 0;
         teclado = new Scanner(System.in);
-        lerProcessos();
-        Processo processo = processos.get(1); //só por enquanto - isso é pra mudar quando o escalonador nascer
+        leProcessos();
+        Escalonador escalonador = new Escalonador(processos, "PrioridadeSemPreempcao");
 
-        //deve fazer parte do escalonador ------------- executa as instruções de um processo
-        for (; processo.pc < processo.codigo.size(); processo.pc++){
-            //aqui podemos remover essse for e colocar um while que roda enquanto existirem processos, em cada loop chamamos o escalonador e passamos seu retorno para o metodo que executa uma instrucao desse processo
-            executaProcessoIntrucao(processo);
+        while(continua){
+
+            Processo processo = escalonador.DecideProximoProcessoARodar(tempo);
+
+            if(processo != null){
+                executaProcessoIntrucao(processo);
+                System.out.println("Executando processo: " + processo.pid + "| No tempo: " + tempo);
+                processo.pc++;
+            }else{
+                System.out.println("Nenhum processo ready | No tempo: " + tempo);
+            }
+
+            for(Processo aux : processos){
+                if(aux.waitingTime > 0){
+                    aux.waitingTime--;
+                }
+                if(aux.waitingTime == 0){
+                    aux.estado = Processo.Estado.PRONTO;
+                }
+                
+                if(aux.estado == Processo.Estado.FINALIZADO){
+                    continua = false;
+                }else{
+                    continua = true;
+                }
+            }
+
             tempo++;
         }
+
         teclado.close();
+        System.exit(0);
     }
 
 
@@ -92,21 +118,24 @@ public class Maquina {
             int paramC = Integer.parseInt(param);
 
             if(paramC == 0){
-                System.exit(0);
+                processo.estado = Processo.Estado.FINALIZADO;
+                //devemos mudar para finalizar apenas o processo e nao o algoritmo inteiro
             }else if(paramC == 1){
                 System.out.println(acc);
-                int intervalo = ThreadLocalRandom.current().nextInt(10, 21);
+                processo.estado = Processo.Estado.BLOQUEADO;
+                processo.waitingTime = ThreadLocalRandom.current().nextInt(10, 21);
             }else if(paramC == 2){
                 System.out.print("Insira um numero: ");
                 acc = teclado.nextInt();
-                int intervalo = ThreadLocalRandom.current().nextInt(10, 21);
+                processo.estado = Processo.Estado.BLOQUEADO;
+                processo.waitingTime = ThreadLocalRandom.current().nextInt(10, 21);
             }
         }
         //System.out.println(acc); 
     }
 
     //faz a leitura inicial dos processos - deve ser executada apenas no inicio
-    public static void lerProcessos() {
+    public static void leProcessos() {
         try {
 
             File pasta = new File("programas");
@@ -115,17 +144,17 @@ public class Maquina {
 
                 BufferedReader br = new BufferedReader(new FileReader(txt));
 
-                System.out.println("Carregando processo: " + txt);
-                System.out.println("Deseja definir sua prioridade? Digite NAO caso nao queira, ou um numero entre 2 (baixa prioridade) e 0 (alta prioridade)");
-
                 Processo processo;
+
+                System.out.println("Carregando processo: " + txt + " | Pid: " + Processo.nupid);
+                System.out.println("Deseja definir sua prioridade? Digite NAO caso nao queira, ou um numero entre 2 (baixa prioridade) e 0 (alta prioridade)");
 
                 String entrada = teclado.next().toUpperCase().strip();
 
                 if(entrada.equals("NAO")){
-                    processo = new Processo(0);
+                    processo = new Processo(arrival);
                 }else{
-                    processo = new Processo(0, Integer.parseInt(entrada));
+                    processo = new Processo(arrival, Integer.parseInt(entrada));
                 }
 
                 processos.add(processo);
@@ -157,6 +186,7 @@ public class Maquina {
                     }
 
                 }
+                arrival++;
                 br.close();
             }
 

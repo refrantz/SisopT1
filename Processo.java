@@ -13,7 +13,7 @@ public class Processo implements Comparable<Processo>{
     public Estado estado = Estado.PRONTO; // Inicializa como PRONTO
     public Prioridade prioridade = Prioridade.BAIXA; // BAIXA como padrão
     public Integer arrivalTime;
-    public Integer waitingTime;
+    public Integer waitingTime = 0;
     public Integer endTime;
     public Integer pc;
     public Integer quantum;
