@@ -47,7 +47,21 @@ public class Processo implements Comparable<Processo>{
     }
 
     public Processo(Integer arrivalTime, int prioridade){
-        new Processo(arrivalTime, prioridade, 0);
+        this.pid = "Processo " +nupid;
+        nupid++;
+
+        this.arrivalTime = arrivalTime;
+        
+        if(prioridade == 0){
+            this.prioridade = Prioridade.ALTA;
+        }else if(prioridade == 1){
+            this.prioridade = Prioridade.MEDIA;
+        }else{
+            this.prioridade = Prioridade.BAIXA;
+        }
+
+        this.pc = 0;
+        this.quantum = 0;
     }
 
 
