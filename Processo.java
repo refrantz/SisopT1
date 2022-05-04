@@ -16,6 +16,8 @@ public class Processo implements Comparable<Processo>{
     public Integer waitingTime;
     public Integer endTime;
     public Integer pc;
+    public Integer quantum;
+    public Integer quantumExecutado;
 
 
     public Processo(Integer arrivalTime){
@@ -26,7 +28,7 @@ public class Processo implements Comparable<Processo>{
         this.pc = 0;
     }
 
-    public Processo(Integer arrivalTime, int prioridade){
+    public Processo(Integer arrivalTime, int prioridade, int quantum){
         this.pid = "Processo " +nupid;
         nupid++;
 
@@ -41,7 +43,13 @@ public class Processo implements Comparable<Processo>{
         }
 
         this.pc = 0;
+        this.quantum = quantum;
     }
+
+    public Processo(Integer arrivalTime, int prioridade){
+        new Processo(arrivalTime, prioridade, 0);
+    }
+
 
     @Override public int compareTo(Processo outroProcesso) { //implementação }
         if (this.arrivalTime < outroProcesso.arrivalTime) {
