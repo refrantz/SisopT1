@@ -34,7 +34,7 @@ public class Maquina {
 
             if(processo != null){
                 executaProcessoIntrucao(processo);
-                System.out.println("Executando processo: " + processo.pid + "| No tempo: " + tempo);
+                System.out.println("Processo executado: " + processo.pid +" | no seu pc: " + processo.pc + "| No tempo: " + tempo);
                 processo.pc++;
             }else{
                 System.out.println("Nenhum processo ready | No tempo: " + tempo);
@@ -210,7 +210,7 @@ public class Maquina {
                 op = input[0].toUpperCase();
     
                 if(op.contains(":")){
-                    processo.labels.put(op.substring(0, op.length()-1), processo.pc-1);
+                    processo.labels.put(op.substring(0, op.length()-1), processo.pc);
                 }
             }
         }

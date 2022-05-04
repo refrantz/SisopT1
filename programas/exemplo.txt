@@ -1,6 +1,6 @@
 .code
     load variable
-    ponto1: SUB #2
+    ponto1: SUB #1
     syscall 1
     brpos ponto1
     syscall 0
