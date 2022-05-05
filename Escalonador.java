@@ -76,6 +76,7 @@ public class Escalonador {
 
         List<Processo> processosCopia = new ArrayList<>(this.processos);
         List<Processo> processosFinalizados = processosCopia.stream().filter(p -> p.estado.equals(Processo.Estado.FINALIZADO)).toList();
+
         List<Processo> processosDisponiveis = processosCopia.stream().filter(p -> p.arrivalTime <= unidadeDeTempoAtual)
                                                                      .filter(p -> p.quantumExecutado != 0)
                                                                      .filter(p -> p.estado != Processo.Estado.FINALIZADO).toList();
@@ -97,7 +98,9 @@ public class Escalonador {
         }
 
         Processo proximoDisponivel = AcharProximoEmProcessosDisponiveis(processosDisponiveis);
-        proximoDisponivel.quantumExecutado--;
+        if(proximoDisponivel != null){
+            proximoDisponivel.quantumExecutado--;
+        }
         return proximoDisponivel;
     }
 

@@ -31,6 +31,10 @@ public class Maquina {
         System.out.println(processos.get(0).codigo.get(0));
         Escalonador escalonador = new Escalonador(processos, metodoDeEscalonamento);
 
+        for(Processo processo: processos){
+            System.out.println("quantum:" + processo.quantumExecutado);
+        }
+
         while(continua){
 
             Processo processo = escalonador.DecideProximoProcessoARodar(tempo);
@@ -42,7 +46,7 @@ public class Maquina {
                 processo.pc++;
 
             }else{
-                //System.out.println("Nenhum processo ready | No tempo: " + tempo);
+                System.out.println("Nenhum processo ready | No tempo: " + tempo);
             }
 
             //Atualização de tempo e estados;
@@ -64,15 +68,15 @@ public class Maquina {
                     aux.processing_time++;
                 }
 
-                if(aux.estado == Processo.Estado.FINALIZADO){
-                    continua = false;
-                }
-                else{
-                    continua = true;
-                }
             }
 
+            if(processos.stream().allMatch(p -> p.estado.equals(Processo.Estado.FINALIZADO))){
+                continua = false;
+            }
+
+
             tempo++;
+            printResult();
         }
 
         teclado.close();
@@ -190,10 +194,12 @@ public class Maquina {
                     quantumTime = Integer.parseInt(entrada);
                 }
 
-                System.out.println("Deseja definir sua prioridade? Digite NAO caso nao queira, ou um numero entre 2 (baixa prioridade) e 0 (alta prioridade)");
-                entrada = teclado.next().toUpperCase().strip();
+                if(!(metodoDeEscalonamento == "RoundRobin")){
+                    System.out.println("Deseja definir sua prioridade? Digite NAO caso nao queira, ou um numero entre 2 (baixa prioridade) e 0 (alta prioridade)");
+                    entrada = teclado.next().toUpperCase().strip();
+                }
 
-                if(entrada.equals("NAO")){
+                if(entrada.equals("NAO") || metodoDeEscalonamento == "RoundRobin"){
                     processo = new Processo(arrival);
                 }else{
                     processo = new Processo(arrival, Integer.parseInt(entrada));
@@ -201,6 +207,7 @@ public class Maquina {
 
                 if(quantumTime >= 0){
                     processo.quantum = quantumTime;
+                    processo.quantumExecutado = quantumTime;
                 }
 
 
@@ -266,13 +273,13 @@ public class Maquina {
 
     public static void printResult(){
         System.out.println("------------------------------------------------------------------------------------------------------------");
-        System.out.printf("%20s %20s %20s %20s %20s", "PID", "ARRIVAL TIME", "WAITING TIME", "PROCESSING TIME", "TURNAROUND TIME");
+        System.out.printf("%20s %20s %20s %20s %20s %20s", "PID", "ARRIVAL TIME", "WAITING TIME", "PROCESSING TIME", "TURNAROUND TIME", "STATE");
         System.out.println();
         System.out.println("------------------------------------------------------------------------------------------------------------");
 
         for(Processo processo: processos){
-            System.out.format("%20s %20d %20d %20d %20d",
-                    processo.pid, processo.arrivalTime, processo.pronto_waitingTime, processo.processing_time, processo.turnaround_time);
+            System.out.format("%20s %20d %20d %20d %20d %20s",
+                    processo.pid, processo.arrivalTime, processo.pronto_waitingTime, processo.processing_time, processo.turnaround_time, processo.estado);
             System.out.println();
         }
         System.out.println("------------------------------------------------------------------------------------------------------------");
