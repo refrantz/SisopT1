@@ -27,7 +27,7 @@ public class Maquina {
         teclado = new Scanner(System.in);
         leProcessos();
         System.out.println(processos.get(0).codigo.get(0));
-        Escalonador escalonador = new Escalonador(processos, "PrioridadeSemPreempcao");
+        Escalonador escalonador = new Escalonador(processos, "PrioridadeComPreempcao");
 
         while(continua){
 
@@ -74,6 +74,7 @@ public class Maquina {
         }
 
         teclado.close();
+        printResult();
         System.exit(0);
     }
 
@@ -134,7 +135,8 @@ public class Maquina {
 
             if(paramC == 0){
                 processo.estado = Processo.Estado.FINALIZADO;
-                processo.turnaround_time = tempo - arrival;
+                System.out.println("testelucas " + tempo + " processo : " + processo.pid);
+                processo.turnaround_time = tempo - processo.arrivalTime;
                 //devemos mudar para finalizar apenas o processo e nao o algoritmo inteiro
             }else if(paramC == 1){
                 System.out.println(acc);
@@ -230,5 +232,20 @@ public class Maquina {
                 }
             }
         }
+    }
+
+    public static void printResult(){
+        System.out.println("------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%20s %20s %20s %20s %20s", "PID", "ARRIVAL TIME", "WAITING TIME", "PROCESSING TIME", "TURNAROUND TIME");
+        System.out.println();
+        System.out.println("------------------------------------------------------------------------------------------------------------");
+
+        for(Processo processo: processos){
+            System.out.format("%20s %20d %20d %20d %20d",
+                    processo.pid, processo.arrivalTime, processo.pronto_waitingTime, processo.processing_time, processo.turnaround_time);
+            System.out.println();
+        }
+        System.out.println("------------------------------------------------------------------------------------------------------------");
+
     }
 }
