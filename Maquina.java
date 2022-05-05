@@ -29,7 +29,7 @@ public class Maquina {
         teclado = new Scanner(System.in);
         leProcessos();
         System.out.println(processos.get(0).codigo.get(0));
-        Escalonador escalonador = new Escalonador(processos, "PrioridadeSemPreempcao");
+        Escalonador escalonador = new Escalonador(processos, metodoDeEscalonamento);
 
         while(continua){
 
