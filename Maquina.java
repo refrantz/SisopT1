@@ -12,7 +12,7 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Maquina {
-    static int acc;
+    //static int acc;
     static int tempo;
     static int arrival;
     static List<Processo> processos = new ArrayList<Processo>();
@@ -23,7 +23,7 @@ public class Maquina {
 
     public static void main (String args[]){
 
-        acc = 0;
+        //acc = 0;
         tempo = 0;
         arrival = 0;
         teclado = new Scanner(System.in);
@@ -88,6 +88,7 @@ public class Maquina {
     public static void executaProcessoIntrucao(Processo processo){
         String[] input = processo.codigo.get(processo.pc).split("\\s+");
         String op = input[0].toUpperCase();
+        //acc = 0;
 
         if (input.length <= 1){
             processo.pc++;
@@ -109,30 +110,30 @@ public class Maquina {
         }
 
         if (op.equals("ADD")){
-            acc += Integer.parseInt(param);
+            processo.acc += Integer.parseInt(param);
         }else if(op.equals("SUB")){
-            acc -= Integer.parseInt(param);
+            processo.acc -= Integer.parseInt(param);
         }else if(op.equals("MULT")){
-            acc *= Integer.parseInt(param);
+            processo.acc *= Integer.parseInt(param);
         }else if(op.equals("DIV")){
-            acc /= Integer.parseInt(param);
+            processo.acc /= Integer.parseInt(param);
 
         }else if(op.equals("LOAD")){
             if(processo.dados.containsKey(param)){
-                acc = processo.dados.get(param);
+                processo.acc = processo.dados.get(param);
             }else{
-                acc = Integer.parseInt(param);
+                processo.acc = Integer.parseInt(param);
             }
         }else if(op.equals("STORE")){
-            processo.dados.replace(param, acc);
+            processo.dados.replace(param, processo.acc);
 
         }else if(op.equals("BRANY")){
             processo.pc = processo.labels.get(param);
-        }else if(op.equals("BRPOS") && acc > 0){
+        }else if(op.equals("BRPOS") && processo.acc > 0){
             processo.pc = processo.labels.get(param);
-        }else if(op.equals("BRZERO") && acc == 0){
+        }else if(op.equals("BRZERO") && processo.acc == 0){
             processo.pc = processo.labels.get(param);
-        }else if(op.equals("BRNEG") && acc < 0){
+        }else if(op.equals("BRNEG") && processo.acc < 0){
             processo.pc = processo.labels.get(param);
 
         }else if(op.equals("SYSCALL")){
@@ -144,17 +145,17 @@ public class Maquina {
                 processo.turnaround_time = (1+tempo) - processo.arrivalTime;
                 //devemos mudar para finalizar apenas o processo e nao o algoritmo inteiro
             }else if(paramC == 1){
-                System.out.println(acc);
+                System.out.println(processo.acc);
                 processo.estado = Processo.Estado.BLOQUEADO;
                 processo.waitingTime = ThreadLocalRandom.current().nextInt(10, 21);
             }else if(paramC == 2){
                 System.out.print("Insira um numero: ");
-                acc = teclado.nextInt();
+                processo.acc = teclado.nextInt();
                 processo.estado = Processo.Estado.BLOQUEADO;
                 processo.waitingTime = ThreadLocalRandom.current().nextInt(10, 21);
             }
         }
-        System.out.println(op + " " + param + " | acc: " +acc); 
+        System.out.println(op + " " + param + " | acc: " +processo.acc);
     }
 
     //faz a leitura inicial dos processos - deve ser executada apenas no inicio

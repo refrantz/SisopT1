@@ -82,7 +82,6 @@ public class Escalonador {
                                                                      .filter(p -> p.estado != Processo.Estado.FINALIZADO).toList();
 
         if(processosDisponiveis.stream().count() == 0 && processosFinalizados.stream().count() < this.processos.stream().count()){
-            System.out.println("TA ENTRANDO");
             this.processos.stream().forEach(p -> p.quantumExecutado = p.quantum);
         }
 

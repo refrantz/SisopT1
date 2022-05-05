@@ -17,6 +17,8 @@ public class Processo implements Comparable<Processo>{
     public Integer pronto_waitingTime = 0;
     public Integer processing_time = 0;
     public Integer turnaround_time = 0;
+
+    public Integer acc = 0;
     public Integer pc;
     public Integer quantum;
     public Integer quantumExecutado;
