@@ -31,15 +31,18 @@ public class Maquina {
         while(continua){
 
             Processo processo = escalonador.DecideProximoProcessoARodar(tempo);
-
             if(processo != null){
-                executaProcessoIntrucao(processo);
+
                 System.out.println("Processo executado: " + processo.pid +" | no seu pc: " + processo.pc + "| No tempo: " + tempo);
                 processo.pc++;
+                processo.estado = Processo.Estado.RODANDO;
+                executaProcessoIntrucao(processo);
+
             }else{
                 System.out.println("Nenhum processo ready | No tempo: " + tempo);
             }
 
+            //Atualização de tempo e estados;
             for(Processo aux : processos){
                 if(aux.waitingTime > 0){
                     aux.waitingTime--;
@@ -47,10 +50,23 @@ public class Maquina {
                 if(aux.waitingTime == 0 && aux.estado == Processo.Estado.BLOQUEADO){
                     aux.estado = Processo.Estado.PRONTO;
                 }
-                
+                if(aux.estado == Processo.Estado.PRONTO && aux != processo ){ //se o processo esta na fila de pronto e não conseguiu processador, soma pronto_waiting_time;
+                    aux.pronto_waitingTime++;
+              }
                 if(aux.estado == Processo.Estado.FINALIZADO){
                     continua = false;
-                }else{
+                }
+                if(aux.estado == Processo.Estado.RODANDO && aux != processo){ //se estava em running e nao ta mais - volta pra fila de pronto
+                    aux.estado = Processo.Estado.PRONTO;
+                }
+
+                if(aux.estado == Processo.Estado.RODANDO){ //processing_time tempo em que o processo ficou em estado de running
+                    aux.processing_time++;
+                }
+
+
+
+                else{
                     continua = true;
                 }
             }
@@ -119,7 +135,9 @@ public class Maquina {
 
             if(paramC == 0){
                 processo.estado = Processo.Estado.FINALIZADO;
+                processo.turnaround_time = tempo - arrival;
                 System.out.println(processo.estado);
+
                 //devemos mudar para finalizar apenas o processo e nao o algoritmo inteiro
             }else if(paramC == 1){
                 System.out.println(acc);
