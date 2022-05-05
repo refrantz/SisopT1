@@ -19,6 +19,8 @@ public class Maquina {
     static Scanner teclado;
     static boolean continua = true;
 
+    static String metodoDeEscalonamento;
+
     public static void main (String args[]){
 
         acc = 0;
@@ -27,7 +29,7 @@ public class Maquina {
         teclado = new Scanner(System.in);
         leProcessos();
         System.out.println(processos.get(0).codigo.get(0));
-        Escalonador escalonador = new Escalonador(processos, "PrioridadeComPreempcao");
+        Escalonador escalonador = new Escalonador(processos, "PrioridadeSemPreempcao");
 
         while(continua){
 
@@ -158,22 +160,50 @@ public class Maquina {
 
             File pasta = new File("programas");
 
+            String entrada;
+            System.out.println("Qual o metodo de escalonamento? Digite (1) para sem preempcao, (2) para com preempcao ou (3) para round robin"); //pegando metodo de escalonamento
+            entrada = teclado.next().toUpperCase().strip();
+            if(Integer.parseInt(entrada) == 1){
+                metodoDeEscalonamento = "PrioridadeSemPreempcao";
+            }else if(Integer.parseInt(entrada) == 2){
+                metodoDeEscalonamento = "PrioridadeComPreempcao";
+            }else if(Integer.parseInt(entrada) == 3){
+                metodoDeEscalonamento = "RoundRobin";
+            }
+
             for(File txt : pasta.listFiles()){
 
                 BufferedReader br = new BufferedReader(new FileReader(txt));
 
                 Processo processo;
+                int quantumTime = -1; //-1 atuando como null
 
                 System.out.println("Carregando processo: " + txt + " | Pid: " + Processo.nupid);
-                System.out.println("Deseja definir sua prioridade? Digite NAO caso nao queira, ou um numero entre 2 (baixa prioridade) e 0 (alta prioridade)");
 
-                String entrada = teclado.next().toUpperCase().strip();
+                System.out.println("Arrival time para o processo: " + txt + " ?"); //pegando arrival time de cada processo
+                entrada = teclado.next().toUpperCase().strip();
+                arrival = Integer.parseInt(entrada);
+
+                if(metodoDeEscalonamento == "RoundRobin"){
+                    System.out.println("Quantum time para o processo: " + txt + " ?"); //pegando o quantum time de cada processo
+                    entrada = teclado.next().toUpperCase().strip();
+                    quantumTime = Integer.parseInt(entrada);
+                }
+
+                System.out.println("Deseja definir sua prioridade? Digite NAO caso nao queira, ou um numero entre 2 (baixa prioridade) e 0 (alta prioridade)");
+                entrada = teclado.next().toUpperCase().strip();
 
                 if(entrada.equals("NAO")){
                     processo = new Processo(arrival);
                 }else{
                     processo = new Processo(arrival, Integer.parseInt(entrada));
                 }
+
+                if(quantumTime >= 0){
+                    processo.quantum = quantumTime;
+                }
+
+
 
                 processos.add(processo);
 
