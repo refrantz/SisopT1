@@ -32,7 +32,7 @@ public class Maquina {
         Escalonador escalonador = new Escalonador(processos, metodoDeEscalonamento);
 
         for(Processo processo: processos){
-            System.out.println("quantum:" + processo.quantumExecutado);
+            System.out.println("quantum:" + processo.quantumExecutado );
         }
 
         while(continua){
@@ -76,7 +76,6 @@ public class Maquina {
 
 
             tempo++;
-            printResult();
         }
 
         teclado.close();
@@ -142,7 +141,7 @@ public class Maquina {
             if(paramC == 0){
                 processo.estado = Processo.Estado.FINALIZADO;
                 System.out.println("testelucas " + tempo + " processo : " + processo.pid);
-                processo.turnaround_time = tempo - processo.arrivalTime;
+                processo.turnaround_time = (1+tempo) - processo.arrivalTime;
                 //devemos mudar para finalizar apenas o processo e nao o algoritmo inteiro
             }else if(paramC == 1){
                 System.out.println(acc);
