@@ -26,6 +26,7 @@ public class Maquina {
         arrival = 0;
         teclado = new Scanner(System.in);
         leProcessos();
+        System.out.println(processos.get(0).codigo.get(0));
         Escalonador escalonador = new Escalonador(processos, "PrioridadeSemPreempcao");
 
         while(continua){
@@ -33,13 +34,13 @@ public class Maquina {
             Processo processo = escalonador.DecideProximoProcessoARodar(tempo);
             if(processo != null){
 
-                System.out.println("Processo executado: " + processo.pid +" | no seu pc: " + processo.pc + "| No tempo: " + tempo);
-                processo.pc++;
+                System.out.println("Processo executado: " + processo.pid +" | no seu pc: " + processo.pc + " | No tempo: " + tempo);
                 processo.estado = Processo.Estado.RODANDO;
                 executaProcessoIntrucao(processo);
+                processo.pc++;
 
             }else{
-                System.out.println("Nenhum processo ready | No tempo: " + tempo);
+                //System.out.println("Nenhum processo ready | No tempo: " + tempo);
             }
 
             //Atualização de tempo e estados;
@@ -53,9 +54,6 @@ public class Maquina {
                 if(aux.estado == Processo.Estado.PRONTO && aux != processo ){ //se o processo esta na fila de pronto e não conseguiu processador, soma pronto_waiting_time;
                     aux.pronto_waitingTime++;
               }
-                if(aux.estado == Processo.Estado.FINALIZADO){
-                    continua = false;
-                }
                 if(aux.estado == Processo.Estado.RODANDO && aux != processo){ //se estava em running e nao ta mais - volta pra fila de pronto
                     aux.estado = Processo.Estado.PRONTO;
                 }
@@ -64,8 +62,9 @@ public class Maquina {
                     aux.processing_time++;
                 }
 
-
-
+                if(aux.estado == Processo.Estado.FINALIZADO){
+                    continua = false;
+                }
                 else{
                     continua = true;
                 }
@@ -99,7 +98,7 @@ public class Maquina {
 
         if(param.contains("#")){
             param = param.substring(1);
-        }else if(processo.dados.containsKey(param)){
+        }else if(processo.dados.containsKey(param) && !op.equals("STORE")){
             param = "" + processo.dados.get(param);
         }
 
@@ -136,8 +135,6 @@ public class Maquina {
             if(paramC == 0){
                 processo.estado = Processo.Estado.FINALIZADO;
                 processo.turnaround_time = tempo - arrival;
-                System.out.println(processo.estado);
-
                 //devemos mudar para finalizar apenas o processo e nao o algoritmo inteiro
             }else if(paramC == 1){
                 System.out.println(acc);
@@ -150,7 +147,7 @@ public class Maquina {
                 processo.waitingTime = ThreadLocalRandom.current().nextInt(10, 21);
             }
         }
-        //System.out.println(acc); 
+        System.out.println(op + " " + param + " | acc: " +acc); 
     }
 
     //faz a leitura inicial dos processos - deve ser executada apenas no inicio
