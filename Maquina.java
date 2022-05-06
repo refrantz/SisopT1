@@ -48,6 +48,7 @@ public class Maquina {
 
             //Atualização de tempo e estados;
             for(Processo aux : processos){
+                System.out.println("Processo: " + aux.pid + " | estado:" + aux.estado); //adicionado apos submeter trabalho
                 if(aux.waitingTime > 0){
                     aux.waitingTime--;
                 }
